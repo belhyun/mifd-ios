@@ -13,11 +13,12 @@
 #define FONT_SIZE 14.0f
 #define CELL_CONTENT_WIDTH 320.0f
 #define CELL_CONTENT_MARGIN 20.0f
+#define CELL_EXTRA_AREA 30.0f;
 
+const int kLoadingCellTag = 1273;
 @interface MainTableViewController ()
-@property(nonatomic,assign) NSUInteger selectedRow;
 @property(nonatomic,assign) Boolean isExpand;
-@property (nonatomic, retain) NSArray *tweets;
+@property (nonatomic, retain) NSMutableArray *tweets;
 @end
 @implementation MainTableViewController
 
@@ -40,11 +41,14 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.tableView.separatorColor = [UIColor yellowColor];
-    self.selectedRow = -1;
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 10, 0);
+    self.tweets = [[NSMutableArray alloc]init];
     self.isExpand = false;
+    self.curPage = 1;
     self.HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:self.HUD];
     self.HUD.delegate = self;
+    [self.HUD show:YES];
     [self fetchTweets];
 }
 
@@ -59,6 +63,9 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
+    if(self.curPage > self.totalPage){
+        return self.tweets.count;
+    }
     return self.tweets.count;
 }
 
@@ -87,8 +94,8 @@
 }
 
 -(void) expandRow:(UITapGestureRecognizer *)gr{
+    /*
     MainTableViewCell *view = (MainTableViewCell *)gr.view;
-    self.selectedRow = view.itemId;
     if(self.isExpand){
         self.isExpand = false;
     }else{
@@ -96,19 +103,21 @@
     }
     [self.tableView beginUpdates];
     [self.tableView endUpdates];
+    */
 }
 
 -(void) fetchTweets{
-    [self.HUD show:YES];
+    //[self.HUD show:YES];
     HttpClient *httpClient = [HttpClient sharedClient];
-    [httpClient GET:RANK parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [httpClient GET:[NSMutableString stringWithFormat:@"%@?page=%d",RANK,self.curPage] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [self.HUD hide:YES];
-        NSMutableArray *results = [NSMutableArray array];
+        self.totalPage = [[responseObject objectForKey:@"total_page"] intValue];
+        self.totalCount = [[responseObject objectForKey:@"total_count"] intValue];
+        responseObject = [responseObject objectForKey:@"tweets"];
         for(id tweetDictionary in responseObject){
             Tweet *tweet = [[Tweet alloc] initWithDictionary:tweetDictionary];
-            [results addObject:tweet];
+             [self.tweets addObject:tweet];
         }
-        self.tweets = results;
         [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [self.HUD hide:YES];
@@ -125,40 +134,55 @@
     static NSString *CellIdentifier = @"tweet";
     UITableViewCell *cell = nil;
     MainTableViewCell *subCell = nil;
+    UIImage * image = [UIImage imageNamed: @"twitter_thumb.png"];
     Tweet *tweet = [self.tweets objectAtIndex:indexPath.section];
-    cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
-    if(![self isDefinedEle:cell.contentView.subviews:1]){
+    cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    if(cell == nil){
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    }
+    if(indexPath.section < self.tweets.count-1 || indexPath.section+1 == self.totalCount){
+        if ((([cell.contentView viewWithTag:1])))
+        {
+            [[cell.contentView viewWithTag:1]removeFromSuperview];
+        }
         subCell = [[MainTableViewCell alloc]init];
         subCell.itemId = indexPath.section;
-        [subCell setFrame:CGRectMake(10, 0, cell.contentView.bounds.size.width-18, cell.bounds.size.height)];
+        [subCell setFrame:CGRectMake(10, 0, cell.contentView.bounds.size.width, cell.bounds.size.height)];
         subCell.backgroundColor = [UIColor yellowColor];
-        [subCell setTag:1];
-        [cell addSubview:subCell];
+        [subCell setTag:indexPath.section];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandRow:)];
         [subCell addGestureRecognizer:tap];
-    }
-    
-    if(![self isDefinedEle:cell.contentView.subviews:2]){
+        subCell.tag = 1;
+        [cell.contentView addSubview:subCell];
+        
         UILabel *text = [[UILabel alloc]init];
         [text setFont:[UIFont systemFontOfSize:FONT_SIZE]];
         text.attributedText = [self getText:tweet];
         [text setNumberOfLines:0];
         [text setFrame:CGRectMake(60, 0, cell.contentView.bounds.size.width-85, cell.bounds.size.height)];
-        [text setTag:2];
+        [text sizeToFit];
         [[subCell contentView] addSubview:text];
-    }
-    
-    if(![self isDefinedEle:cell.contentView.subviews:2]){
-        UIImage * image = [UIImage imageNamed: @"twitter_thumb.png"];
+        
         UIImageView * imageView = [[UIImageView alloc] initWithImage: image];
         [imageView setFrame:CGRectMake(0, 0, 50.0, 50.0)];
-        [imageView setTag:3];
-        [[subCell contentView]addSubview:imageView];
+        [[subCell contentView] addSubview:imageView];
+    }else{
+       return [self loadingCell];
     }
-    
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell setSelected:NO animated:NO];
+    return cell;
+}
+
+-(UITableViewCell *)loadingCell{
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityIndicator.center = cell.center;
+    [cell addSubview:activityIndicator];
+    [activityIndicator startAnimating];
+    
+    cell.tag = kLoadingCellTag;
+    
     return cell;
 }
 
@@ -168,7 +192,7 @@
     CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), 20000.0f);
     CGRect boundingRect = [text boundingRectWithSize:constraint options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:FONT_SIZE]} context:nil];
     CGSize size = boundingRect.size;
-    return size.height + (CELL_CONTENT_MARGIN * 2);
+    return size.height + (CELL_CONTENT_MARGIN * 2);//+ CELL_EXTRA_AREA;
 }
 
 -(NSMutableAttributedString *)getText:(Tweet *)tweet{
@@ -182,15 +206,25 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    /*
     if(self.isExpand && section == self.selectedRow){
        return 50.0;
     }
+     */
     return 0.0;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 10.0;
 }
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(self.curPage <= self.totalPage && cell.tag == kLoadingCellTag){
+        self.curPage++;
+        [self fetchTweets];
+    }
+}
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

@@ -16,5 +16,8 @@
 -(void) expandRow:(UITapGestureRecognizer *)gr;
 -(void) fetchTweets;
 -(NSMutableAttributedString *)getText:(Tweet *)tweet;
+@property (assign, nonatomic) int curPage;
+@property (assign, nonatomic) int totalPage;
+@property (assign, nonatomic) int totalCount;
 @property (strong, nonatomic) MBProgressHUD *HUD;
 @end
