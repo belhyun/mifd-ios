@@ -12,4 +12,5 @@
 
 @interface HttpClient : AFHTTPRequestOperationManager
 +(HttpClient *)sharedClient;
++(void)downloadingServerImageFromUrl:(UIImageView*)imgView AndUrl:(NSString*)strUrl;
 @end

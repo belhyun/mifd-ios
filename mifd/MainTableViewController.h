@@ -10,8 +10,9 @@
 #import "MBProgressHUD.h"
 #import "MainTableViewCell.h"
 #import "Tweet.h"
+#import "TTTAttributedLabel.h"
 
-@interface MainTableViewController : UITableViewController <MBProgressHUDDelegate>
+@interface MainTableViewController : UITableViewController <MBProgressHUDDelegate, TTTAttributedLabelDelegate>
 -(Boolean) isDefinedEle:(NSArray *)array :(NSInteger) tag;
 -(void) expandRow:(UITapGestureRecognizer *)gr;
 -(void) fetchTweets;

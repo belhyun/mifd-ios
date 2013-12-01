@@ -12,6 +12,7 @@
 @property (nonatomic, retain) NSString *screenName;
 @property (nonatomic, assign) NSString *uuid;
 @property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *image;
 
 -(id) initWithDictionary:(NSDictionary *)dictionary;
 @end

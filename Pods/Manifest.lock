@@ -18,13 +18,16 @@ PODS:
   - AFNetworking/UIKit (2.0.3):
     - AFNetworking/NSURLConnection
   - MBProgressHUD (0.8)
+  - TTTAttributedLabel (1.7.5)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
   - MBProgressHUD (~> 0.8)
+  - TTTAttributedLabel
 
 SPEC CHECKSUMS:
   AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
+  TTTAttributedLabel: 1eb635d4d844cb7abce4d839faefca2a3409950d
 
 COCOAPODS: 0.28.0

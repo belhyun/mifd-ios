@@ -15,6 +15,7 @@
         self.name = [dictionary objectForKey:@"name"];
         self.screenName = [dictionary objectForKey:@"screen_name"];
         self.uuid = [dictionary objectForKey:@"uuid"];
+        self.image = [dictionary objectForKey:@"image"];
     }
     return self;
 }

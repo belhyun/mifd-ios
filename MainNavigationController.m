@@ -26,7 +26,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSLog(@"#####MainNavigationController load");
     // Do any additional setup after loading the view.
 }
 
