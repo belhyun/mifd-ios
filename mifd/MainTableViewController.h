@@ -16,6 +16,7 @@
 -(Boolean) isDefinedEle:(NSArray *)array :(NSInteger) tag;
 -(void) expandRow:(UITapGestureRecognizer *)gr;
 -(void) fetchTweets;
+-(void) closeWebView;
 -(NSMutableAttributedString *)getText:(Tweet *)tweet;
 @property (assign, nonatomic) int curPage;
 @property (assign, nonatomic) int totalPage;

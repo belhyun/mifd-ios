@@ -91,6 +91,26 @@ const int kLoadingCellTag = 1273;
     UIView *headerView = [[UIView alloc] init];
     headerView.backgroundColor = [UIColor clearColor];
     return headerView;
+    /*
+     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,tableView.frame.size.width,30)];
+     
+     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 0, headerView.frame.size.width-120.0, headerView.frame.size.height)];
+     
+     headerLabel.textAlignment = UITextAlignmentRight;
+     headerLabel.backgroundColor = [UIColor clearColor];
+     NSInteger tbHeight = 50;
+     UIToolbar *tb = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, tbHeight)];
+     tb.translucent = YES;
+     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"완료" style:UIBarButtonItemStyleBordered target:self action:@selector(completeSelect)];
+     NSArray *barButton  =   [[NSArray alloc] initWithObjects:flexibleSpace,doneButton,nil];
+     [tb setItems:barButton];
+     [headerView addSubview:tb];
+     barButton = nil;
+     [headerView addSubview:headerLabel];
+     
+     return headerView;
+     */
 }
 
 -(void) expandRow:(UITapGestureRecognizer *)gr{
@@ -178,7 +198,30 @@ const int kLoadingCellTag = 1273;
 }
 
 -(void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
-    NSLog(@"didSelectLinkWithURL");
+    UIWebView *webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
+    webview.scalesPageToFit = YES;
+    webview.autoresizesSubviews = YES;
+    webview.autoresizingMask=(UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
+    [webview setBackgroundColor:[UIColor clearColor]];
+    webview.tag = 9999;
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [webview loadRequest:request];
+    
+    NSInteger tbHeight = 65;
+    UIToolbar *tb = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, tbHeight)];
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"닫기" style:UIBarButtonItemStyleBordered target:self action:@selector(closeWebView)];
+    NSArray *barButton  =   [[NSArray alloc] initWithObjects:flexibleSpace,doneButton,nil];
+    [tb setItems:barButton];
+    tb.tag = 9998;
+    
+    [self.navigationController.view addSubview:tb];
+    [self.tableView addSubview:webview];
+}
+
+-(void)closeWebView{
+    [[self.navigationController.view viewWithTag:9998] removeFromSuperview];
+    [[self.tableView viewWithTag:9999] removeFromSuperview];
 }
 
 -(UITableViewCell *)loadingCell{
@@ -205,7 +248,7 @@ const int kLoadingCellTag = 1273;
 
 -(NSMutableAttributedString *)getText:(Tweet *)tweet{
     NSString *needToChangeStr = tweet.user.name;
-    NSString *displayString = [NSString stringWithFormat:@"%@ %@\n\n%@", tweet.user.name,tweet.user.screenName,tweet.text];
+    NSString *displayString = [NSString stringWithFormat:@"%@ @%@\n\n%@", tweet.user.name,tweet.user.screenName,tweet.text];
     NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc]initWithString:displayString];
     NSUInteger begin = 0;
     NSUInteger end = [needToChangeStr length];
