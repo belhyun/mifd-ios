@@ -156,8 +156,7 @@ const int kLoadingCellTag = 1273;
         TTTAttributedLabel *text = [[TTTAttributedLabel alloc] init];
         text.delegate = self;
         text.enabledTextCheckingTypes = NSTextCheckingTypeLink;
-        [text setFont:[UIFont systemFontOfSize:FONT_SIZE]];
-        text.text = [[self getText:tweet] mutableCopy];
+        text.text = (NSString *)[[self getText:tweet] mutableCopy];
         [text setNumberOfLines:0];
         [text setFrame:CGRectMake(60, 0, cell.contentView.bounds.size.width-85, cell.bounds.size.height)];
         [text sizeToFit];
@@ -210,6 +209,7 @@ const int kLoadingCellTag = 1273;
     NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc]initWithString:displayString];
     NSUInteger begin = 0;
     NSUInteger end = [needToChangeStr length];
+    [attriStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:FONT_SIZE] range:NSMakeRange(0, displayString.length)];
     [attriStr addAttribute:NSFontAttributeName value:[UIFont  fontWithName:@"HelveticaNeue-Bold" size:20] range:NSMakeRange(begin, end)];
     return attriStr;
 }
