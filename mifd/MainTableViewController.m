@@ -42,6 +42,8 @@ const int kLoadingCellTag = 1273;
     NSLog(@"MainTableViewController View Load");
     self.tableView.separatorColor = [UIColor yellowColor];
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 10, 0);
+    UITabBarItem *tabBarItem = [self.tabBarController.tabBar.items objectAtIndex:0];
+    tabBarItem.image = [UIImage imageNamed:@"twitter_thumb.png"];
     self.tweets = [[NSMutableArray alloc]init];
     self.isExpand = false;
     self.curPage = 1;
@@ -198,7 +200,8 @@ const int kLoadingCellTag = 1273;
 }
 
 -(void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
-    UIWebView *webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
+    UIViewController *webViewController = [[UIViewController alloc]init];
+    UIWebView *webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 65, 320, self.view.frame.size.height)];
     webview.scalesPageToFit = YES;
     webview.autoresizesSubviews = YES;
     webview.autoresizingMask=(UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
@@ -215,13 +218,13 @@ const int kLoadingCellTag = 1273;
     [tb setItems:barButton];
     tb.tag = 9998;
     
-    [self.navigationController.view addSubview:tb];
-    [self.tableView addSubview:webview];
+    [webViewController.view addSubview:webview];
+    [webViewController.view addSubview:tb];
+    [self presentViewController:webViewController animated:YES completion:nil];
 }
 
 -(void)closeWebView{
-    [[self.navigationController.view viewWithTag:9998] removeFromSuperview];
-    [[self.tableView viewWithTag:9999] removeFromSuperview];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(UITableViewCell *)loadingCell{
