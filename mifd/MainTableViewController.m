@@ -120,12 +120,12 @@ const int kLoadingCellTag = 1273;
     MainTableViewCell *view = (MainTableViewCell *)gr.view;
     if(self.isExpand){
         self.isExpand = false;
-    }else{
-        self.isExpand = true;
-    }
-    [self.tableView beginUpdates];
-    [self.tableView endUpdates];
-    */
+     }else{
+     self.isExpand = true;
+     }
+     [self.tableView beginUpdates];
+     [self.tableView endUpdates];
+     */
 }
 
 -(void) fetchTweets{
@@ -138,7 +138,7 @@ const int kLoadingCellTag = 1273;
         responseObject = [responseObject objectForKey:@"tweets"];
         for(id tweetDictionary in responseObject){
             Tweet *tweet = [[Tweet alloc] initWithDictionary:tweetDictionary];
-             [self.tweets addObject:tweet];
+            [self.tweets addObject:tweet];
         }
         [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -155,44 +155,45 @@ const int kLoadingCellTag = 1273;
 {
     static NSString *CellIdentifier = @"tweet";
     UITableViewCell *cell = nil;
+    
+    if(indexPath.section >= self.tweets.count){
+        return [self loadingCell];
+    }
+    
     cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
-    if(indexPath.section < self.tweets.count){
-        if ((([cell.contentView viewWithTag:1])))
-        {
-            [[cell.contentView viewWithTag:1]removeFromSuperview];
-        }
-        Tweet *tweet = [self.tweets objectAtIndex:indexPath.section];
-        MainTableViewCell *subCell = [[MainTableViewCell alloc]init];
-        subCell.itemId = indexPath.section;
-        [subCell setFrame:CGRectMake(10, 0, cell.contentView.bounds.size.width-18, cell.bounds.size.height)];
-        subCell.backgroundColor = [UIColor yellowColor];
-        [subCell setTag:indexPath.section];
-        //UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandRow:)];
-        //[subCell addGestureRecognizer:tap];
-        subCell.tag = 1;
-        [cell.contentView addSubview:subCell];
-        
-        TTTAttributedLabel *text = [[TTTAttributedLabel alloc] init];
-        text.delegate = self;
-        text.enabledTextCheckingTypes = NSTextCheckingTypeLink;
-        text.text = (NSString *)[[self getText:tweet] mutableCopy];
-        [text setNumberOfLines:0];
-        [text setFrame:CGRectMake(60, 0, cell.contentView.bounds.size.width-85, cell.bounds.size.height)];
-        [text sizeToFit];
-        [[subCell contentView] addSubview:text];
-
-        UIImageView * imageView = [[UIImageView alloc] init];
-        [imageView setFrame:CGRectMake(0, 0, 50.0, 50.0)];
-        [[subCell contentView] addSubview:imageView];
-        [HttpClient downloadingServerImageFromUrl:imageView AndUrl:tweet.user.image];
-        [subCell.contentView addSubview:imageView];
-        
-    }else{
-       return [self loadingCell];
+    
+    if ((([cell.contentView viewWithTag:1])))
+    {
+        [[cell.contentView viewWithTag:1]removeFromSuperview];
     }
+    Tweet *tweet = [self.tweets objectAtIndex:indexPath.section];
+    MainTableViewCell *subCell = [[MainTableViewCell alloc]init];
+    subCell.itemId = indexPath.section;
+    [subCell setFrame:CGRectMake(10, 0, cell.contentView.bounds.size.width-18, cell.bounds.size.height)];
+    subCell.backgroundColor = [UIColor yellowColor];
+    [subCell setTag:indexPath.section];
+    //UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandRow:)];
+    //[subCell addGestureRecognizer:tap];
+    subCell.tag = 1;
+    [cell.contentView addSubview:subCell];
+    
+    TTTAttributedLabel *text = [[TTTAttributedLabel alloc] init];
+    text.delegate = self;
+    text.enabledTextCheckingTypes = NSTextCheckingTypeLink;
+    text.text = (NSString *)[[self getText:tweet] mutableCopy];
+    [text setNumberOfLines:0];
+    [text setFrame:CGRectMake(60, 0, cell.contentView.bounds.size.width-85, cell.bounds.size.height)];
+    [text sizeToFit];
+    [[subCell contentView] addSubview:text];
+    
+    UIImageView * imageView = [[UIImageView alloc] init];
+    [imageView setFrame:CGRectMake(0, 0, 50.0, 50.0)];
+    [[subCell contentView] addSubview:imageView];
+    [HttpClient downloadingServerImageFromUrl:imageView AndUrl:tweet.user.image];
+    [subCell.contentView addSubview:imageView];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell setSelected:NO animated:NO];
     cell.userInteractionEnabled = YES;
@@ -200,8 +201,10 @@ const int kLoadingCellTag = 1273;
 }
 
 -(void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
+    [self.HUD hide:YES];
     UIViewController *webViewController = [[UIViewController alloc]init];
     UIWebView *webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 65, 320, self.view.frame.size.height)];
+    webview.delegate = self;
     webview.scalesPageToFit = YES;
     webview.autoresizesSubviews = YES;
     webview.autoresizingMask=(UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
@@ -217,7 +220,7 @@ const int kLoadingCellTag = 1273;
     NSArray *barButton  =   [[NSArray alloc] initWithObjects:flexibleSpace,doneButton,nil];
     [tb setItems:barButton];
     tb.tag = 9998;
-    
+    [webview addSubview:self.HUD];
     [webViewController.view addSubview:webview];
     [webViewController.view addSubview:tb];
     [self presentViewController:webViewController animated:YES completion:nil];
@@ -233,14 +236,12 @@ const int kLoadingCellTag = 1273;
     activityIndicator.center = cell.center;
     [cell addSubview:activityIndicator];
     [activityIndicator startAnimating];
-    
     cell.tag = kLoadingCellTag;
-    
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;{
-    if(indexPath.section == self.curPage*10) return 0.0;
+    if(indexPath.section == self.curPage*10) return 50.0;
     Tweet *tweet = [self.tweets objectAtIndex:indexPath.section];
     NSString *text = [[self getText:tweet] string];
     CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), 20000.0f);
@@ -278,6 +279,14 @@ const int kLoadingCellTag = 1273;
         self.curPage++;
         [self fetchTweets];
     }
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView{
+    [self.HUD hide:YES];
+}
+
+-(void)webViewDidStartLoad:(UIWebView *)webView{
+    [self.HUD show:YES];
 }
 
 /*

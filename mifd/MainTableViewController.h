@@ -12,7 +12,7 @@
 #import "Tweet.h"
 #import "TTTAttributedLabel.h"
 
-@interface MainTableViewController : UITableViewController <MBProgressHUDDelegate, TTTAttributedLabelDelegate>
+@interface MainTableViewController : UITableViewController <MBProgressHUDDelegate, TTTAttributedLabelDelegate, UIWebViewDelegate>
 -(Boolean) isDefinedEle:(NSArray *)array :(NSInteger) tag;
 -(void) expandRow:(UITapGestureRecognizer *)gr;
 -(void) fetchTweets;
