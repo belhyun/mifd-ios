@@ -19,6 +19,9 @@ const int kLoadingCellTag = 1273;
 @interface MainTableViewController ()
 @property(nonatomic,assign) Boolean isExpand;
 @property (nonatomic, retain) NSMutableArray *tweets;
+-(void)pullToRefresh;
+-(void)stopRefresh;
+-(void)scrollToTop;
 @end
 @implementation MainTableViewController
 
@@ -39,7 +42,6 @@ const int kLoadingCellTag = 1273;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    NSLog(@"MainTableViewController View Load");
     self.tableView.separatorColor = [UIColor yellowColor];
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 10, 0);
     UITabBarItem *tabBarItem = [self.tabBarController.tabBar.items objectAtIndex:0];
@@ -51,7 +53,31 @@ const int kLoadingCellTag = 1273;
     [self.view addSubview:self.HUD];
     self.HUD.delegate = self;
     [self.HUD show:YES];
+    UIRefreshControl *refresh = [[UIRefreshControl alloc]init];
+    refresh.attributedTitle = [[NSAttributedString alloc]initWithString:@"Pull to refresh" attributes:nil];
+    [refresh addTarget:self action:@selector(pullToRefresh) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refresh;
     [self fetchTweets];
+}
+
+-(void)pullToRefresh{
+    self.curPage = 1;
+    self.tweets = [[NSMutableArray alloc]init];
+    [self fetchTweets];
+    [self performSelector:@selector(stopRefresh) withObject:nil afterDelay:1.5];
+}
+
+-(void)stopRefresh{
+    [self.refreshControl endRefreshing];
+}
+
+-(void) scrollToTop
+{
+    if ([self numberOfSectionsInTableView:self.tableView] > 0)
+    {
+        NSIndexPath* top = [NSIndexPath indexPathForRow:NSNotFound inSection:0];
+        [self.tableView scrollToRowAtIndexPath:top atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 - (void)didReceiveMemoryWarning

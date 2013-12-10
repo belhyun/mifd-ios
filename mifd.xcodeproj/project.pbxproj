@@ -24,7 +24,6 @@
 		4951A2D0183C8367006CECFD /* MainTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4951A2CF183C8367006CECFD /* MainTableViewController.m */; };
 		4951A2D3183C8A19006CECFD /* MainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4951A2D2183C8A19006CECFD /* MainNavigationController.m */; };
 		4951A2D8183C91BF006CECFD /* MainTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4951A2D7183C91BF006CECFD /* MainTableViewCell.m */; };
-		4951A2DD184024FA006CECFD /* twitter_thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 4951A2DC184024FA006CECFD /* twitter_thumb.png */; };
 		49BEBF6E18447C54001ED965 /* HttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BEBF6D18447C54001ED965 /* HttpClient.m */; };
 		49BEBF711845764D001ED965 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BEBF701845764D001ED965 /* Tweet.m */; };
 		49BEBF7418457660001ED965 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BEBF7318457660001ED965 /* User.m */; };
@@ -65,7 +64,6 @@
 		4951A2D2183C8A19006CECFD /* MainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainNavigationController.m; sourceTree = "<group>"; };
 		4951A2D6183C91BF006CECFD /* MainTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTableViewCell.h; sourceTree = "<group>"; };
 		4951A2D7183C91BF006CECFD /* MainTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTableViewCell.m; sourceTree = "<group>"; };
-		4951A2DC184024FA006CECFD /* twitter_thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = twitter_thumb.png; path = ../twitter_thumb.png; sourceTree = "<group>"; };
 		49BEBF6C18447C54001ED965 /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
 		49BEBF6D18447C54001ED965 /* HttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpClient.m; sourceTree = "<group>"; };
 		49BEBF6F1845764D001ED965 /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tweet.h; sourceTree = "<group>"; };
@@ -212,7 +210,6 @@
 		4951A2D91840242A006CECFD /* resource */ = {
 			isa = PBXGroup;
 			children = (
-				4951A2DC184024FA006CECFD /* twitter_thumb.png */,
 			);
 			name = resource;
 			sourceTree = "<group>";
@@ -309,7 +306,6 @@
 				4951A2A0183AED91006CECFD /* InfoPlist.strings in Resources */,
 				4951A2A8183AED91006CECFD /* Images.xcassets in Resources */,
 				4951A2C8183B3EE7006CECFD /* mainStoryBoard.storyboard in Resources */,
-				4951A2DD184024FA006CECFD /* twitter_thumb.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
