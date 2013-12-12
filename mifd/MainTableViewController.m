@@ -22,6 +22,7 @@ const int kLoadingCellTag = 1273;
 -(void)pullToRefresh;
 -(void)stopRefresh;
 -(void)scrollToTop;
+-(void)buttonPressed;
 @end
 @implementation MainTableViewController
 
@@ -177,6 +178,10 @@ const int kLoadingCellTag = 1273;
     return nil;
 }
 
+-(void)buttonPressed{
+    
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"tweet";
@@ -219,7 +224,14 @@ const int kLoadingCellTag = 1273;
     [imageView setFrame:CGRectMake(0, 0, 50.0, 50.0)];
     [[subCell contentView] addSubview:imageView];
     [HttpClient downloadingServerImageFromUrl:imageView AndUrl:tweet.user.image];
-    [subCell.contentView addSubview:imageView];
+    /*
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(cell.contentView.bounds.size.width-50.0, 30.0, 40.0, 40.0)];
+    [button setBackgroundColor:[UIColor redColor]];
+    [button setReversesTitleShadowWhenHighlighted:YES];
+    [button setShowsTouchWhenHighlighted:YES];
+    [button addTarget:self action:@selector(buttonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [subCell.contentView addSubview:button];
+    */
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell setSelected:NO animated:NO];
     cell.userInteractionEnabled = YES;
@@ -273,7 +285,7 @@ const int kLoadingCellTag = 1273;
     CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), 20000.0f);
     CGRect boundingRect = [text boundingRectWithSize:constraint options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:FONT_SIZE]} context:nil];
     CGSize size = boundingRect.size;
-    return size.height + (CELL_CONTENT_MARGIN * 2);//+ CELL_EXTRA_AREA;
+    return size.height + (CELL_CONTENT_MARGIN * 2) + CELL_EXTRA_AREA;
 }
 
 -(NSMutableAttributedString *)getText:(Tweet *)tweet{

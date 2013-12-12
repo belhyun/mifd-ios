@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1676188475A642A5BF4B760D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26F28F23B3644C0CAA3DF001 /* libPods.a */; };
+		493787EB1859872500FEE0A2 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 493787EA1859872500FEE0A2 /* Accounts.framework */; };
+		493787ED1859875F00FEE0A2 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 493787EC1859875F00FEE0A2 /* Social.framework */; };
+		493787F01859CB7600FEE0A2 /* MifdKeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 493787EF1859CB7600FEE0A2 /* MifdKeychainItemWrapper.m */; };
+		493787F41859D24A00FEE0A2 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 493787F31859D24A00FEE0A2 /* Security.framework */; };
 		4951A296183AED91006CECFD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4951A295183AED91006CECFD /* Foundation.framework */; };
 		4951A298183AED91006CECFD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4951A297183AED91006CECFD /* CoreGraphics.framework */; };
 		4951A29A183AED91006CECFD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4951A299183AED91006CECFD /* UIKit.framework */; };
@@ -24,6 +28,7 @@
 		4951A2D0183C8367006CECFD /* MainTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4951A2CF183C8367006CECFD /* MainTableViewController.m */; };
 		4951A2D3183C8A19006CECFD /* MainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4951A2D2183C8A19006CECFD /* MainNavigationController.m */; };
 		4951A2D8183C91BF006CECFD /* MainTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4951A2D7183C91BF006CECFD /* MainTableViewCell.m */; };
+		4991CD40185979B90018FB3F /* UserSnsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4991CD3F185979B90018FB3F /* UserSnsTableViewController.m */; };
 		49BEBF6E18447C54001ED965 /* HttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BEBF6D18447C54001ED965 /* HttpClient.m */; };
 		49BEBF711845764D001ED965 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BEBF701845764D001ED965 /* Tweet.m */; };
 		49BEBF7418457660001ED965 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BEBF7318457660001ED965 /* User.m */; };
@@ -41,6 +46,11 @@
 
 /* Begin PBXFileReference section */
 		26F28F23B3644C0CAA3DF001 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		493787EA1859872500FEE0A2 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		493787EC1859875F00FEE0A2 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		493787EE1859CB7600FEE0A2 /* MifdKeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MifdKeychainItemWrapper.h; sourceTree = "<group>"; };
+		493787EF1859CB7600FEE0A2 /* MifdKeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MifdKeychainItemWrapper.m; sourceTree = "<group>"; };
+		493787F31859D24A00FEE0A2 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4951A292183AED91006CECFD /* mifd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mifd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4951A295183AED91006CECFD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4951A297183AED91006CECFD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -64,6 +74,8 @@
 		4951A2D2183C8A19006CECFD /* MainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainNavigationController.m; sourceTree = "<group>"; };
 		4951A2D6183C91BF006CECFD /* MainTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTableViewCell.h; sourceTree = "<group>"; };
 		4951A2D7183C91BF006CECFD /* MainTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTableViewCell.m; sourceTree = "<group>"; };
+		4991CD3E185979B90018FB3F /* UserSnsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSnsTableViewController.h; sourceTree = "<group>"; };
+		4991CD3F185979B90018FB3F /* UserSnsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserSnsTableViewController.m; sourceTree = "<group>"; };
 		49BEBF6C18447C54001ED965 /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
 		49BEBF6D18447C54001ED965 /* HttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpClient.m; sourceTree = "<group>"; };
 		49BEBF6F1845764D001ED965 /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tweet.h; sourceTree = "<group>"; };
@@ -78,6 +90,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				493787F41859D24A00FEE0A2 /* Security.framework in Frameworks */,
+				493787ED1859875F00FEE0A2 /* Social.framework in Frameworks */,
+				493787EB1859872500FEE0A2 /* Accounts.framework in Frameworks */,
 				4951A298183AED91006CECFD /* CoreGraphics.framework in Frameworks */,
 				4951A29A183AED91006CECFD /* UIKit.framework in Frameworks */,
 				4951A296183AED91006CECFD /* Foundation.framework in Frameworks */,
@@ -126,6 +141,9 @@
 		4951A294183AED91006CECFD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				493787F31859D24A00FEE0A2 /* Security.framework */,
+				493787EC1859875F00FEE0A2 /* Social.framework */,
+				493787EA1859872500FEE0A2 /* Accounts.framework */,
 				4951A295183AED91006CECFD /* Foundation.framework */,
 				4951A297183AED91006CECFD /* CoreGraphics.framework */,
 				4951A299183AED91006CECFD /* UIKit.framework */,
@@ -190,6 +208,8 @@
 				4951A2D2183C8A19006CECFD /* MainNavigationController.m */,
 				4951A2CE183C8367006CECFD /* MainTableViewController.h */,
 				4951A2CF183C8367006CECFD /* MainTableViewController.m */,
+				4991CD3E185979B90018FB3F /* UserSnsTableViewController.h */,
+				4991CD3F185979B90018FB3F /* UserSnsTableViewController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -203,6 +223,8 @@
 				49BEBF701845764D001ED965 /* Tweet.m */,
 				49BEBF7218457660001ED965 /* User.h */,
 				49BEBF7318457660001ED965 /* User.m */,
+				493787EE1859CB7600FEE0A2 /* MifdKeychainItemWrapper.h */,
+				493787EF1859CB7600FEE0A2 /* MifdKeychainItemWrapper.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -357,11 +379,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				493787F01859CB7600FEE0A2 /* MifdKeychainItemWrapper.m in Sources */,
 				49BEBF7418457660001ED965 /* User.m in Sources */,
 				49BEBF6E18447C54001ED965 /* HttpClient.m in Sources */,
 				4951A2A6183AED91006CECFD /* AppDelegate.m in Sources */,
 				4951A2A2183AED91006CECFD /* main.m in Sources */,
 				49BEBF711845764D001ED965 /* Tweet.m in Sources */,
+				4991CD40185979B90018FB3F /* UserSnsTableViewController.m in Sources */,
 				4951A2D3183C8A19006CECFD /* MainNavigationController.m in Sources */,
 				4951A2D0183C8367006CECFD /* MainTableViewController.m in Sources */,
 				4951A2D8183C91BF006CECFD /* MainTableViewCell.m in Sources */,

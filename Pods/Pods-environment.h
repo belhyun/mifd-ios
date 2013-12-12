@@ -48,6 +48,12 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 0
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 3
 
+// KeychainItemWrapper
+#define COCOAPODS_POD_AVAILABLE_KeychainItemWrapper
+#define COCOAPODS_VERSION_MAJOR_KeychainItemWrapper 1
+#define COCOAPODS_VERSION_MINOR_KeychainItemWrapper 2
+#define COCOAPODS_VERSION_PATCH_KeychainItemWrapper 0
+
 // MBProgressHUD
 #define COCOAPODS_POD_AVAILABLE_MBProgressHUD
 #define COCOAPODS_VERSION_MAJOR_MBProgressHUD 0

@@ -49,4 +49,23 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (void)getTwitterAccountOnCompletion:(void (^)(ACAccount *))completionHandler {
+    ACAccountStore *account = [[ACAccountStore alloc]init];
+    ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    [account requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error){
+        if(granted == YES){
+            NSArray *twitterAccounts = [account accountsWithAccountType:accountType];
+            if(twitterAccounts == nil || [twitterAccounts count] == 0){
+            }else{
+                ACAccount *twitterAccount = [twitterAccounts objectAtIndex:0];
+                [[NSUserDefaults standardUserDefaults] setInteger:SocialAccountTypeTwitter forKey:@"user account"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                completionHandler(twitterAccount);
+            }
+        }else{
+            NSLog(@"%@",[error localizedDescription]);
+        }
+    }];
+}
+
 @end
