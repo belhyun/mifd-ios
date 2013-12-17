@@ -11,6 +11,9 @@
 #import "MainTableViewCell.h"
 #import "Tweet.h"
 #import "TTTAttributedLabel.h"
+#import "MifdKeychainItemWrapper.h"
+#import <Accounts/Accounts.h>
+#import <Social/Social.h>
 
 @interface MainTableViewController : UITableViewController <MBProgressHUDDelegate, TTTAttributedLabelDelegate, UIWebViewDelegate>
 -(Boolean) isDefinedEle:(NSArray *)array :(NSInteger) tag;

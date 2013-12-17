@@ -9,11 +9,12 @@
 #import "MainTableViewController.h"
 #import "MainTableViewCell.h"
 #import "HttpClient.h"
+#import "AppDelegate.h"
 
 #define FONT_SIZE 14.0f
 #define CELL_CONTENT_WIDTH 320.0f
-#define CELL_CONTENT_MARGIN 20.0f
-#define CELL_EXTRA_AREA 30.0f;
+#define CELL_CONTENT_MARGIN 5.0f
+#define CELL_EXTRA_AREA 40.0f;
 
 const int kLoadingCellTag = 1273;
 @interface MainTableViewController ()
@@ -22,7 +23,9 @@ const int kLoadingCellTag = 1273;
 -(void)pullToRefresh;
 -(void)stopRefresh;
 -(void)scrollToTop;
--(void)buttonPressed;
+-(void)buttonPressed:(id)sender;
+-(void)favoriteButtonPressed:(id)sender;
+-(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params;
 @end
 @implementation MainTableViewController
 
@@ -178,8 +181,36 @@ const int kLoadingCellTag = 1273;
     return nil;
 }
 
--(void)buttonPressed{
-    
+-(void)buttonPressed:(id)sender{
+    UIButton *clicked = (UIButton *) sender;
+    [self snsRequest:[NSString stringWithFormat:@"https://api.twitter.com/1.1/statuses/retweet/%@.json",((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid] :sender :nil];
+}
+
+-(void)favoriteButtonPressed:(id)sender{
+    UIButton *clicked = (UIButton *) sender;
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc]init];
+    [dictionary setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"id"];
+    [self snsRequest:@"https://api.twitter.com/1.1/favorites/create.json" :sender :dictionary];
+}
+
+-(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params{
+    ACAccountStore *accountStore = [[ACAccountStore alloc]init];
+    ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    [self.HUD show:YES];
+    if(![@"mifd_empty_1234" isEqualToString:(NSString *)[[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)]]){
+        NSArray *accountsArray = [accountStore accountsWithAccountType:accountType];
+        if ([accountsArray count] > 0) {
+            ACAccount *twitterAccount = [accountsArray objectAtIndex:0];
+            NSURL *requestUrl = [NSURL URLWithString:url];
+            SLRequest *posts = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodPOST URL:requestUrl parameters:params];
+            [posts setAccount:twitterAccount];
+            [posts performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+                [self.HUD hide:YES];
+            }];
+        }
+    }else{
+        //로그인이 되어있지 않을 때
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -206,9 +237,9 @@ const int kLoadingCellTag = 1273;
     [subCell setFrame:CGRectMake(10, 0, cell.contentView.bounds.size.width-18, cell.bounds.size.height)];
     subCell.backgroundColor = [UIColor yellowColor];
     [subCell setTag:indexPath.section];
+    subCell.tag = 1;
     //UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandRow:)];
     //[subCell addGestureRecognizer:tap];
-    subCell.tag = 1;
     [cell.contentView addSubview:subCell];
     
     TTTAttributedLabel *text = [[TTTAttributedLabel alloc] init];
@@ -217,6 +248,7 @@ const int kLoadingCellTag = 1273;
     text.text = (NSString *)[[self getText:tweet] mutableCopy];
     [text setNumberOfLines:0];
     [text setFrame:CGRectMake(60, 0, cell.contentView.bounds.size.width-85, cell.bounds.size.height)];
+    //[text setBackgroundColor:[UIColor redColor]];
     [text sizeToFit];
     [[subCell contentView] addSubview:text];
     
@@ -224,14 +256,23 @@ const int kLoadingCellTag = 1273;
     [imageView setFrame:CGRectMake(0, 0, 50.0, 50.0)];
     [[subCell contentView] addSubview:imageView];
     [HttpClient downloadingServerImageFromUrl:imageView AndUrl:tweet.user.image];
-    /*
-    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(cell.contentView.bounds.size.width-50.0, 30.0, 40.0, 40.0)];
-    [button setBackgroundColor:[UIColor redColor]];
+
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(55.0, text.frame.size.height+((cell.bounds.size.height-text.frame.size.height)/6.0), 30.0, 30.0)];
     [button setReversesTitleShadowWhenHighlighted:YES];
     [button setShowsTouchWhenHighlighted:YES];
-    [button addTarget:self action:@selector(buttonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [button setBackgroundImage:[UIImage imageNamed:@"twitter_retweet"] forState:UIControlStateNormal];
+    button.tag = indexPath.section;
+    [button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [subCell.contentView addSubview:button];
-    */
+    
+    UIButton *favoriteBtn = [[UIButton alloc]initWithFrame:CGRectMake(110.0, text.frame.size.height+((cell.bounds.size.height-text.frame.size.height)/6.0), 30.0, 30.0)];
+    [favoriteBtn setReversesTitleShadowWhenHighlighted:YES];
+    [favoriteBtn setShowsTouchWhenHighlighted:YES];
+    [favoriteBtn setBackgroundImage:[UIImage imageNamed:@"favorite"] forState:UIControlStateNormal];
+    favoriteBtn.tag = indexPath.section;
+    [favoriteBtn addTarget:self action:@selector(favoriteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [subCell.contentView addSubview:favoriteBtn];
+    
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell setSelected:NO animated:NO];
     cell.userInteractionEnabled = YES;
@@ -278,19 +319,25 @@ const int kLoadingCellTag = 1273;
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section == self.curPage*10) return 50.0;
     Tweet *tweet = [self.tweets objectAtIndex:indexPath.section];
-    NSString *text = [[self getText:tweet] string];
-    CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), 20000.0f);
-    CGRect boundingRect = [text boundingRectWithSize:constraint options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:FONT_SIZE]} context:nil];
+    //NSString *text = (NSString *)[[self getText:tweet] mutableCopy];
+    //CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), CGFLOAT_MAX);
+    //CGRect boundingRect = [text boundingRectWithSize:constraint options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingTruncatesLastVisibleLine) attributes:nil context:nil];
+    //CGSize size = boundingRect.size;
+    //return size.height + (CELL_CONTENT_MARGIN * 2) + CELL_EXTRA_AREA;
+    
+    CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), CGFLOAT_MAX);
+    NSAttributedString *text = [self getText:tweet];
+    CGRect boundingRect = [text boundingRectWithSize:constraint options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) context:nil];
     CGSize size = boundingRect.size;
     return size.height + (CELL_CONTENT_MARGIN * 2) + CELL_EXTRA_AREA;
 }
 
 -(NSMutableAttributedString *)getText:(Tweet *)tweet{
     NSString *needToChangeStr = tweet.user.name;
-    NSString *displayString = [NSString stringWithFormat:@"%@ @%@\n\n%@", tweet.user.name,tweet.user.screenName,tweet.text];
+    NSString *displayString = [NSString stringWithFormat:@"%@\n@%@\n\n%@", tweet.user.name,tweet.user.screenName,tweet.text];
     NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc]initWithString:displayString];
     NSUInteger begin = 0;
     NSUInteger end = [needToChangeStr length];

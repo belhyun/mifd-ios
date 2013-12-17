@@ -12,6 +12,6 @@
 #import "MBProgressHUD.h"
 #import "MifdKeychainItemWrapper.h"
 
-@interface UserSnsTableViewController : UITableViewController<MBProgressHUDDelegate>
+@interface UserSnsTableViewController : UITableViewController<MBProgressHUDDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) MBProgressHUD *HUD;
 @end

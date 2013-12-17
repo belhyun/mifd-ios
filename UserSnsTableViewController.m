@@ -53,7 +53,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 2;
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -61,10 +61,10 @@
     UITableViewCell *cell = [[UITableViewCell alloc]init];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     if(indexPath.row == 0){
-        if([[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)] != nil){
-            [cell.textLabel setText:[NSString stringWithFormat:@"%@ %@",@"트위터 연동", [[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)]]];
-        }else{
+        if([@"mifd_empty_1234" isEqualToString:(NSString *)[[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)]]){
             [cell.textLabel setText:@"트위터 연동"];
+        }else{
+            [cell.textLabel setText:[NSString stringWithFormat:@"%@ %@",@"트위터 연동", [[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)]]];
         }
     }else if(indexPath.row == 1){
         [cell.textLabel setText:@"페이스북 연동"];
@@ -76,18 +76,30 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.row == 0){
-        AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-        [self.HUD show:YES];
-        [appDelegate getTwitterAccountOnCompletion:^(ACAccount *twitterAccount){
-            //If we successfully retrieved a Twitter account
-            [self.HUD hide:YES];
-            if(twitterAccount) {
-                UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                [cell.textLabel setText:[NSString stringWithFormat:@"%@ %@",cell.textLabel.text, twitterAccount.accountDescription]];
-                [[MifdKeychainItemWrapper sharedClient] setObject:twitterAccount.accountDescription forKey:(__bridge id)(kSecAttrAccount)];
-            }
-        }];
+        if([@"mifd_empty_1234" isEqualToString:(NSString *)[[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)]]){
+            AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+            [self.HUD show:YES];
+            [appDelegate getTwitterAccountOnCompletion:^(ACAccount *twitterAccount){
+                //If we successfully retrieved a Twitter account
+                [self.HUD hide:YES];
+                if(twitterAccount) {
+                    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                    [cell.textLabel setText:[NSString stringWithFormat:@"%@ %@",cell.textLabel.text, twitterAccount.accountDescription]];
+                    [[MifdKeychainItemWrapper sharedClient] setObject:twitterAccount.accountDescription forKey:(__bridge id)(kSecAttrAccount)];
+                }
+            }];
+        }else{
+            [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"트위터 연동을 해제할까요?" delegate:self cancelButtonTitle:@"취소" otherButtonTitles:@"확인", nil] show];
+        }
     }else{
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex == 1){
+        [[MifdKeychainItemWrapper sharedClient] setObject:@"mifd_empty_1234" forKey:(__bridge id)(kSecAttrAccount)];
+        UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
+        [cell.textLabel setText:@"트위터 연동"];
     }
 }
 

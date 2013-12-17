@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>8D8FE0BD-0292-4466-A81C-3A32C815DC86</string>
+	<key>IDESourceControlProjectName</key>
+	<string>mifd</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>B4DB77A6-341B-4AB8-8C70-8458B1BC0BCB</key>
+		<string>https://github.com/belhyun/mifd-ios.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>mifd.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>B4DB77A6-341B-4AB8-8C70-8458B1BC0BCB</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/belhyun/mifd-ios.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>B4DB77A6-341B-4AB8-8C70-8458B1BC0BCB</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B4DB77A6-341B-4AB8-8C70-8458B1BC0BCB</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mifd</string>
+		</dict>
+	</array>
+</dict>
+</plist>
