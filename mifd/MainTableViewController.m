@@ -23,7 +23,7 @@ const int kLoadingCellTag = 1273;
 -(void)pullToRefresh;
 -(void)stopRefresh;
 -(void)scrollToTop;
--(void)buttonPressed:(id)sender;
+-(void)retweetButtonPressed:(id)sender;
 -(void)favoriteButtonPressed:(id)sender;
 -(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params;
 @end
@@ -181,7 +181,7 @@ const int kLoadingCellTag = 1273;
     return nil;
 }
 
--(void)buttonPressed:(id)sender{
+-(void)retweetButtonPressed:(id)sender{
     UIButton *clicked = (UIButton *) sender;
     [self snsRequest:[NSString stringWithFormat:@"https://api.twitter.com/1.1/statuses/retweet/%@.json",((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid] :sender :nil];
 }
@@ -262,7 +262,7 @@ const int kLoadingCellTag = 1273;
     [button setShowsTouchWhenHighlighted:YES];
     [button setBackgroundImage:[UIImage imageNamed:@"twitter_retweet"] forState:UIControlStateNormal];
     button.tag = indexPath.section;
-    [button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(retweetButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [subCell.contentView addSubview:button];
     
     UIButton *favoriteBtn = [[UIButton alloc]initWithFrame:CGRectMake(110.0, text.frame.size.height+((cell.bounds.size.height-text.frame.size.height)/6.0), 30.0, 30.0)];
