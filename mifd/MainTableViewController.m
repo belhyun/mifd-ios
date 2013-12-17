@@ -14,7 +14,7 @@
 #define FONT_SIZE 14.0f
 #define CELL_CONTENT_WIDTH 320.0f
 #define CELL_CONTENT_MARGIN 5.0f
-#define CELL_EXTRA_AREA 40.0f;
+#define CELL_EXTRA_AREA 60.0f;
 
 const int kLoadingCellTag = 1273;
 @interface MainTableViewController ()

@@ -61,10 +61,10 @@
     UITableViewCell *cell = [[UITableViewCell alloc]init];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     if(indexPath.row == 0){
-        if([@"mifd_empty_1234" isEqualToString:(NSString *)[[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)]]){
+        if([MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] == nil){
             [cell.textLabel setText:@"트위터 연동"];
         }else{
-            [cell.textLabel setText:[NSString stringWithFormat:@"%@ %@",@"트위터 연동", [[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)]]];
+            [cell.textLabel setText:[NSString stringWithFormat:@"%@ %@",@"트위터 연동",[MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"]]];
         }
     }else if(indexPath.row == 1){
         [cell.textLabel setText:@"페이스북 연동"];
@@ -76,7 +76,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.row == 0){
-        if([@"mifd_empty_1234" isEqualToString:(NSString *)[[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)]]){
+        if([MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] == nil){
             AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
             [self.HUD show:YES];
             [appDelegate getTwitterAccountOnCompletion:^(ACAccount *twitterAccount){
@@ -85,7 +85,7 @@
                 if(twitterAccount) {
                     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
                     [cell.textLabel setText:[NSString stringWithFormat:@"%@ %@",cell.textLabel.text, twitterAccount.accountDescription]];
-                    [[MifdKeychainItemWrapper sharedClient] setObject:twitterAccount.accountDescription forKey:(__bridge id)(kSecAttrAccount)];
+                    [MifdKeychainItemWrapper createKeychainValue:twitterAccount.accountDescription forIdentifier:@"desc"];
                 }
             }];
         }else{
@@ -97,7 +97,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 1){
-        [[MifdKeychainItemWrapper sharedClient] setObject:@"mifd_empty_1234" forKey:(__bridge id)(kSecAttrAccount)];
+        [MifdKeychainItemWrapper deleteItemFromKeychainWithIdentifier:@"desc"];
         UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
         [cell.textLabel setText:@"트위터 연동"];
     }
