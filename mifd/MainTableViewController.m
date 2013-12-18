@@ -25,7 +25,7 @@ const int kLoadingCellTag = 1273;
 -(void)scrollToTop;
 -(void)retweetButtonPressed:(id)sender;
 -(void)favoriteButtonPressed:(id)sender;
--(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params;
+-(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params :(NSString *)type :(void (^)(void))callbackBlock;
 @end
 @implementation MainTableViewController
 
@@ -183,21 +183,25 @@ const int kLoadingCellTag = 1273;
 
 -(void)retweetButtonPressed:(id)sender{
     UIButton *clicked = (UIButton *) sender;
-    [self snsRequest:[NSString stringWithFormat:@"https://api.twitter.com/1.1/statuses/retweet/%@.json",((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid] :sender :nil];
+    [self snsRequest:[NSString stringWithFormat:@"https://api.twitter.com/1.1/statuses/retweet/%@.json",((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid] :sender :nil :@"R" :^(void){
+        
+    }];
 }
 
 -(void)favoriteButtonPressed:(id)sender{
     UIButton *clicked = (UIButton *) sender;
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc]init];
     [dictionary setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"id"];
-    [self snsRequest:@"https://api.twitter.com/1.1/favorites/create.json" :sender :dictionary];
+    [self snsRequest:@"https://api.twitter.com/1.1/favorites/create.json" :sender :dictionary :@"F" :^(void){
+        
+    }];
 }
 
--(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params{
+-(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params :(NSString *)type :(void (^)(void))callbackBlock{
     ACAccountStore *accountStore = [[ACAccountStore alloc]init];
     ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     [self.HUD show:YES];
-    if(![@"mifd_empty_1234" isEqualToString:(NSString *)[[MifdKeychainItemWrapper sharedClient] objectForKey:(__bridge id)(kSecAttrAccount)]]){
+    if([MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] != nil){
         NSArray *accountsArray = [accountStore accountsWithAccountType:accountType];
         if ([accountsArray count] > 0) {
             ACAccount *twitterAccount = [accountsArray objectAtIndex:0];
@@ -206,6 +210,7 @@ const int kLoadingCellTag = 1273;
             [posts setAccount:twitterAccount];
             [posts performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
                 [self.HUD hide:YES];
+                callbackBlock();
             }];
         }
     }else{
@@ -262,7 +267,7 @@ const int kLoadingCellTag = 1273;
     [button setShowsTouchWhenHighlighted:YES];
     [button setBackgroundImage:[UIImage imageNamed:@"twitter_retweet"] forState:UIControlStateNormal];
     button.tag = indexPath.section;
-    [button addTarget:self action:@selector(retweetButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(favoriteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [subCell.contentView addSubview:button];
     
     UIButton *favoriteBtn = [[UIButton alloc]initWithFrame:CGRectMake(110.0, text.frame.size.height+((cell.bounds.size.height-text.frame.size.height)/6.0), 30.0, 30.0)];
