@@ -32,6 +32,7 @@
 		4951A2D3183C8A19006CECFD /* MainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4951A2D2183C8A19006CECFD /* MainNavigationController.m */; };
 		4951A2D8183C91BF006CECFD /* MainTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4951A2D7183C91BF006CECFD /* MainTableViewCell.m */; };
 		4991CD40185979B90018FB3F /* UserSnsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4991CD3F185979B90018FB3F /* UserSnsTableViewController.m */; };
+		49B5A0421863D0CE003B2DB4 /* UserTweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B5A0411863D0CE003B2DB4 /* UserTweet.m */; };
 		49BEBF6E18447C54001ED965 /* HttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BEBF6D18447C54001ED965 /* HttpClient.m */; };
 		49BEBF711845764D001ED965 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BEBF701845764D001ED965 /* Tweet.m */; };
 		49BEBF7418457660001ED965 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BEBF7318457660001ED965 /* User.m */; };
@@ -82,6 +83,8 @@
 		4951A2D7183C91BF006CECFD /* MainTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTableViewCell.m; sourceTree = "<group>"; };
 		4991CD3E185979B90018FB3F /* UserSnsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSnsTableViewController.h; sourceTree = "<group>"; };
 		4991CD3F185979B90018FB3F /* UserSnsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserSnsTableViewController.m; sourceTree = "<group>"; };
+		49B5A0401863D0CE003B2DB4 /* UserTweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserTweet.h; sourceTree = "<group>"; };
+		49B5A0411863D0CE003B2DB4 /* UserTweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserTweet.m; sourceTree = "<group>"; };
 		49BEBF6C18447C54001ED965 /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
 		49BEBF6D18447C54001ED965 /* HttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpClient.m; sourceTree = "<group>"; };
 		49BEBF6F1845764D001ED965 /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tweet.h; sourceTree = "<group>"; };
@@ -233,6 +236,8 @@
 				49BEBF7318457660001ED965 /* User.m */,
 				493787EE1859CB7600FEE0A2 /* MifdKeychainItemWrapper.h */,
 				493787EF1859CB7600FEE0A2 /* MifdKeychainItemWrapper.m */,
+				49B5A0401863D0CE003B2DB4 /* UserTweet.h */,
+				49B5A0411863D0CE003B2DB4 /* UserTweet.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -400,6 +405,7 @@
 				4991CD40185979B90018FB3F /* UserSnsTableViewController.m in Sources */,
 				4951A2D3183C8A19006CECFD /* MainNavigationController.m in Sources */,
 				4951A2D0183C8367006CECFD /* MainTableViewController.m in Sources */,
+				49B5A0421863D0CE003B2DB4 /* UserTweet.m in Sources */,
 				4951A2D8183C91BF006CECFD /* MainTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

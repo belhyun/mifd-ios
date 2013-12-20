@@ -26,6 +26,7 @@ const int kLoadingCellTag = 1273;
 -(void)retweetButtonPressed:(id)sender;
 -(void)favoriteButtonPressed:(id)sender;
 -(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params :(NSString *)type :(void (^)(void))callbackBlock;
+-(void)mifdRequest:(NSMutableDictionary *)params;
 @end
 @implementation MainTableViewController
 
@@ -183,19 +184,52 @@ const int kLoadingCellTag = 1273;
 
 -(void)retweetButtonPressed:(id)sender{
     UIButton *clicked = (UIButton *) sender;
-    [self snsRequest:[NSString stringWithFormat:@"https://api.twitter.com/1.1/statuses/retweet/%@.json",((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid] :sender :nil :@"R" :^(void){
+    if([MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] != nil){
+        [self snsRequest:[NSString stringWithFormat:@"https://api.twitter.com/1.1/statuses/retweet/%@.json",((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid] :sender :nil :@"R" :^(void){
+            NSMutableDictionary *params = [[NSMutableDictionary alloc]init];
+            [params setObject:[MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] forKey:@"user_desc"];
+            [params setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"tweet_uuid"];
+            [params setObject:@"R" forKey:@"type"];
+            [self mifdRequest:params];
+        }];
+    }else{
         
-    }];
+    }
 }
 
 -(void)favoriteButtonPressed:(id)sender{
     UIButton *clicked = (UIButton *) sender;
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc]init];
-    [dictionary setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"id"];
-    [self snsRequest:@"https://api.twitter.com/1.1/favorites/create.json" :sender :dictionary :@"F" :^(void){
-        
+    if([MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] != nil){
+        NSMutableDictionary *dictionary = [[NSMutableDictionary alloc]init];
+        [dictionary setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"id"];
+        [self snsRequest:@"https://api.twitter.com/1.1/favorites/create.json" :sender :dictionary :@"F" :^(void){
+            NSMutableDictionary *params = [[NSMutableDictionary alloc]init];
+            [params setObject:[MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] forKey:@"user_desc"];
+            [params setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"tweet_uuid"];
+            [params setObject:@"F" forKey:@"type"];
+            [self mifdRequest:params];
+        }];
+    }else{
+      
+    }
+}
+
+-(void)mifdRequest:(NSMutableDictionary *)params{
+    HttpClient *httpClient = [HttpClient sharedClient];
+    [httpClient POST:[NSMutableString stringWithFormat:@"%@",USER_TWEET] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.HUD hide:YES];
+        NSLog(@"response : %@",responseObject);
+        /*
+        for(id userTweetDictionary in responseObject){
+            UserTweet *userTweet = [[UserTweet alloc] initWithDictionary:userTweetDictionary];
+        }
+        */
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self.HUD hide:YES];
+        NSLog(@"Error: %@", error);
     }];
 }
+
 
 -(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params :(NSString *)type :(void (^)(void))callbackBlock{
     ACAccountStore *accountStore = [[ACAccountStore alloc]init];
@@ -209,7 +243,6 @@ const int kLoadingCellTag = 1273;
             SLRequest *posts = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodPOST URL:requestUrl parameters:params];
             [posts setAccount:twitterAccount];
             [posts performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-                [self.HUD hide:YES];
                 callbackBlock();
             }];
         }
@@ -267,7 +300,7 @@ const int kLoadingCellTag = 1273;
     [button setShowsTouchWhenHighlighted:YES];
     [button setBackgroundImage:[UIImage imageNamed:@"twitter_retweet"] forState:UIControlStateNormal];
     button.tag = indexPath.section;
-    [button addTarget:self action:@selector(favoriteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(retweetButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [subCell.contentView addSubview:button];
     
     UIButton *favoriteBtn = [[UIButton alloc]initWithFrame:CGRectMake(110.0, text.frame.size.height+((cell.bounds.size.height-text.frame.size.height)/6.0), 30.0, 30.0)];

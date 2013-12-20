@@ -19,6 +19,7 @@
         self.score = [[dictionary objectForKey:@"score"] integerValue];
         self.uuid = [dictionary objectForKey:@"uuid"];
         self.user = [[User alloc]initWithDictionary:[dictionary objectForKey:@"user"]];
+        self.userTweets = [[[UserTweet alloc]init]getUserTweets:[dictionary objectForKey:@"user_tweets"]];
     }
     return self;
 }

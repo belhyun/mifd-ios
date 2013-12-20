@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AFHTTPRequestOperationManager.h"
 #define RANK @"http://14.63.198.222:3000/api/v1/tweets/rank"
+#define USER_TWEET @"http://14.63.198.222:3000/api/v1/user_tweets"
 
 @interface HttpClient : AFHTTPRequestOperationManager
 +(HttpClient *)sharedClient;

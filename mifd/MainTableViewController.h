@@ -10,6 +10,7 @@
 #import "MBProgressHUD.h"
 #import "MainTableViewCell.h"
 #import "Tweet.h"
+#import "UserTweet.h"
 #import "TTTAttributedLabel.h"
 #import "MifdKeychainItemWrapper.h"
 #import <Accounts/Accounts.h>

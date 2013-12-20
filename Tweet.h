@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "User.h"
+#import "UserTweet.h"
 
 @interface Tweet : NSObject
 @property (nonatomic, retain) NSDate *createdAt;
@@ -17,6 +18,6 @@
 @property (nonatomic, assign) NSInteger score;
 @property (nonatomic, retain) NSString *uuid;
 @property (nonatomic, retain) User *user;
-
+@property (nonatomic, retain) NSMutableArray *userTweets;
 -(id) initWithDictionary:(NSDictionary *)dictionary;
 @end
