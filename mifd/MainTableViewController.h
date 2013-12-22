@@ -20,10 +20,12 @@
 -(Boolean) isDefinedEle:(NSArray *)array :(NSInteger) tag;
 -(void) expandRow:(UITapGestureRecognizer *)gr;
 -(void) fetchTweets;
+-(void) fetchTweetsWithInit;
 -(void) closeWebView;
 -(Boolean)isAlreadyRetweet:(Tweet *)tweet;
 -(Boolean)isAlreadyFavorite:(Tweet *)tweet;
 -(NSMutableAttributedString *)getText:(Tweet *)tweet;
+-(void) changeLoginView;
 @property (assign, nonatomic) int curPage;
 @property (assign, nonatomic) int totalPage;
 @property (assign, nonatomic) int totalCount;

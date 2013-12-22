@@ -65,6 +65,7 @@ const int kLoadingCellTag = 1273;
     [refresh addTarget:self action:@selector(pullToRefresh) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refresh;
     self.tableView.dataSource = self;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchTweetsWithInit) name:@"fetchTweets" object:nil];
     [self fetchTweets];
 }
 
@@ -109,6 +110,11 @@ const int kLoadingCellTag = 1273;
 {
     // Return the number of rows in the section.
     return 1;
+}
+
+-(void)changeLoginView{
+    [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"트위터 로그인이 필요합니다." delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil] show];
+    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
 }
 
 - (Boolean)isDefinedEle:(NSArray *)array :(NSInteger)tag{
@@ -162,6 +168,12 @@ const int kLoadingCellTag = 1273;
      */
 }
 
+-(void) fetchTweetsWithInit{
+    self.curPage = 1;
+    self.tweets = [[NSMutableArray alloc]init];
+    [self fetchTweets];
+}
+
 -(void) fetchTweets{
     HttpClient *httpClient = [HttpClient sharedClient];
     [httpClient GET:[NSMutableString stringWithFormat:@"%@?page=%d&user_desc=%@",RANK,self.curPage,[User getUserDesc]] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -186,7 +198,7 @@ const int kLoadingCellTag = 1273;
 
 -(void)retweetButtonPressed:(id)sender{
     UIButton *clicked = (UIButton *) sender;
-    if([MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] != nil){
+    if([User isLogged]){
         [self snsRequest:[NSString stringWithFormat:@"https://api.twitter.com/1.1/statuses/retweet/%@.json",((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid] :sender :nil :@"R" :^(void){
             NSMutableDictionary *params = [[NSMutableDictionary alloc]init];
             [params setObject:[MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] forKey:@"user_desc"];
@@ -195,14 +207,13 @@ const int kLoadingCellTag = 1273;
             [self mifdRequest:params :clicked.tag];
         }];
     }else{
-        [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"트위터 로그인이 필요합니다." delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil] show];
-        self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
+        [self changeLoginView];
     }
 }
 
 -(void)favoriteButtonPressed:(id)sender{
     UIButton *clicked = (UIButton *) sender;
-    if([MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] != nil){
+    if([User isLogged]){
         NSMutableDictionary *dictionary = [[NSMutableDictionary alloc]init];
         [dictionary setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"id"];
         [self snsRequest:@"https://api.twitter.com/1.1/favorites/create.json" :sender :dictionary :@"F" :^(void){
@@ -213,18 +224,24 @@ const int kLoadingCellTag = 1273;
             [self mifdRequest:params :clicked.tag];
         }];
     }else{
-      [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"트위터 로그인이 필요합니다." delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil] show];
-        self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
-
+        [self changeLoginView];
     }
 }
 
 -(void)retweetDelButtonPressed:(id)sender{
-    [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"이미 retweet 하셨네요!" delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil] show];
+    if([User isLogged]){
+        [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"이미 retweet 하셨네요!" delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil] show];
+    }else{
+        [self changeLoginView];
+    }
 }
 
 -(void)favoriteDelButtonPressed:(id)sender{
-    [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"이미 favorite 하셨네요!" delegate:self cancelButtonTitle:@"취소" otherButtonTitles:nil, nil] show];
+    if([User isLogged]){
+        [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"이미 favorite 하셨네요!" delegate:self cancelButtonTitle:@"취소" otherButtonTitles:nil, nil] show];
+    }else{
+        [self changeLoginView];
+    }
 }
 
 -(void)mifdRequest:(NSMutableDictionary *)params :(NSUInteger)tag{

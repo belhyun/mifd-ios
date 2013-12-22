@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "mifd/MainTableViewController.m"
-            timestampString = "409384860.259941"
+            timestampString = "409386484.197394"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "430"
-            endingLineNumber = "430"
+            startingLineNumber = "447"
+            endingLineNumber = "447"
             landmarkName = "-getText:"
             landmarkType = "5">
          </BreakpointContent>

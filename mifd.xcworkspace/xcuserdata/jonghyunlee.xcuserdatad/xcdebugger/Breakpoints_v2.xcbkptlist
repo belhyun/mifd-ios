@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "mifd/MainTableViewController.m"
-            timestampString = "409384860.259941"
+            timestampString = "409386484.197394"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
             landmarkName = "-retweetButtonPressed:"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "mifd/MainTableViewController.m"
-            timestampString = "409384860.259941"
+            timestampString = "409386484.197394"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
             landmarkName = "-favoriteButtonPressed:"
             landmarkType = "5">
          </BreakpointContent>
@@ -113,6 +113,22 @@
             endingLineNumber = "16"
             landmarkName = "-getUserTweets:"
             landmarkType = "4">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "User.m"
+            timestampString = "409385454.434691"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "+isLogged"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

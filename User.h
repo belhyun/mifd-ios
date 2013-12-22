@@ -16,4 +16,5 @@
 @property (nonatomic, retain) NSString *image;
 +(NSString *)getUserDesc;
 -(id) initWithDictionary:(NSDictionary *)dictionary;
++(Boolean) isLogged;
 @end

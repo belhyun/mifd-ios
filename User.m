@@ -23,4 +23,9 @@
 +(NSString *)getUserDesc{
     return [MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"];
 }
+
++(Boolean) isLogged{
+    return ([MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] != nil);
+}
+
 @end
