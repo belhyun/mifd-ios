@@ -7,12 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MifdKeychainItemWrapper.h"
 
 @interface User : NSObject
 @property (nonatomic, retain) NSString *screenName;
 @property (nonatomic, assign) NSString *uuid;
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *image;
-
++(NSString *)getUserDesc;
 -(id) initWithDictionary:(NSDictionary *)dictionary;
 @end

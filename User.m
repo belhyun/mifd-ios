@@ -19,4 +19,8 @@
     }
     return self;
 }
+
++(NSString *)getUserDesc{
+    return [MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"];
+}
 @end

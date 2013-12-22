@@ -25,8 +25,10 @@ const int kLoadingCellTag = 1273;
 -(void)scrollToTop;
 -(void)retweetButtonPressed:(id)sender;
 -(void)favoriteButtonPressed:(id)sender;
+-(void)retweetDelButtonPressed:(id)sender;
+-(void)favoriteDelButtonPressed:(id)sender;
 -(void)snsRequest:(NSString *)url :(id)sender :(NSMutableDictionary *)params :(NSString *)type :(void (^)(void))callbackBlock;
--(void)mifdRequest:(NSMutableDictionary *)params;
+-(void)mifdRequest:(NSMutableDictionary *)params :(NSUInteger) rowId;
 @end
 @implementation MainTableViewController
 
@@ -62,6 +64,7 @@ const int kLoadingCellTag = 1273;
     refresh.attributedTitle = [[NSAttributedString alloc]initWithString:@"Pull to refresh" attributes:nil];
     [refresh addTarget:self action:@selector(pullToRefresh) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refresh;
+    self.tableView.dataSource = self;
     [self fetchTweets];
 }
 
@@ -160,9 +163,8 @@ const int kLoadingCellTag = 1273;
 }
 
 -(void) fetchTweets{
-    //[self.HUD show:YES];
     HttpClient *httpClient = [HttpClient sharedClient];
-    [httpClient GET:[NSMutableString stringWithFormat:@"%@?page=%d",RANK,self.curPage] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [httpClient GET:[NSMutableString stringWithFormat:@"%@?page=%d&user_desc=%@",RANK,self.curPage,[User getUserDesc]] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [self.HUD hide:YES];
         self.totalPage = [[responseObject objectForKey:@"total_page"] intValue];
         self.totalCount = [[responseObject objectForKey:@"total_count"] intValue];
@@ -190,10 +192,11 @@ const int kLoadingCellTag = 1273;
             [params setObject:[MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] forKey:@"user_desc"];
             [params setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"tweet_uuid"];
             [params setObject:@"R" forKey:@"type"];
-            [self mifdRequest:params];
+            [self mifdRequest:params :clicked.tag];
         }];
     }else{
-        
+        [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"트위터 로그인이 필요합니다." delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil] show];
+        self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
     }
 }
 
@@ -207,23 +210,39 @@ const int kLoadingCellTag = 1273;
             [params setObject:[MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] forKey:@"user_desc"];
             [params setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"tweet_uuid"];
             [params setObject:@"F" forKey:@"type"];
-            [self mifdRequest:params];
+            [self mifdRequest:params :clicked.tag];
         }];
     }else{
-      
+      [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"트위터 로그인이 필요합니다." delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil] show];
+        self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
+
     }
 }
 
--(void)mifdRequest:(NSMutableDictionary *)params{
+-(void)retweetDelButtonPressed:(id)sender{
+    [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"이미 retweet 하셨네요!" delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil] show];
+}
+
+-(void)favoriteDelButtonPressed:(id)sender{
+    [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"이미 favorite 하셨네요!" delegate:self cancelButtonTitle:@"취소" otherButtonTitles:nil, nil] show];
+}
+
+-(void)mifdRequest:(NSMutableDictionary *)params :(NSUInteger)tag{
     HttpClient *httpClient = [HttpClient sharedClient];
     [httpClient POST:[NSMutableString stringWithFormat:@"%@",USER_TWEET] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [self.HUD hide:YES];
-        NSLog(@"response : %@",responseObject);
-        /*
-        for(id userTweetDictionary in responseObject){
-            UserTweet *userTweet = [[UserTweet alloc] initWithDictionary:userTweetDictionary];
+        if([[responseObject objectForKey:@"result"] integerValue] == 1){
+            UserTweet *userTweet = [[UserTweet alloc]init];
+            userTweet.tweetUuid = [params objectForKey:@"tweet_uuid"];
+            userTweet.userDesc = [User getUserDesc];
+            if([[params objectForKey:@"type"] isEqualToString:@"F"]){
+                userTweet.type = @"F";
+            }else if([[params objectForKey:@"type"] isEqualToString:@"R"]){
+                userTweet.type = @"R";
+            }
+            [((Tweet *)[self.tweets objectAtIndex:tag]).userTweets addObject:userTweet];
+            [self.tableView reloadData];
         }
-        */
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [self.HUD hide:YES];
         NSLog(@"Error: %@", error);
@@ -294,27 +313,62 @@ const int kLoadingCellTag = 1273;
     [imageView setFrame:CGRectMake(0, 0, 50.0, 50.0)];
     [[subCell contentView] addSubview:imageView];
     [HttpClient downloadingServerImageFromUrl:imageView AndUrl:tweet.user.image];
-
-    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(55.0, text.frame.size.height+((cell.bounds.size.height-text.frame.size.height)/6.0), 30.0, 30.0)];
-    [button setReversesTitleShadowWhenHighlighted:YES];
-    [button setShowsTouchWhenHighlighted:YES];
-    [button setBackgroundImage:[UIImage imageNamed:@"twitter_retweet"] forState:UIControlStateNormal];
-    button.tag = indexPath.section;
-    [button addTarget:self action:@selector(retweetButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [subCell.contentView addSubview:button];
+    
+    
+    UIButton *retweetBtn = [[UIButton alloc]initWithFrame:CGRectMake(55.0, text.frame.size.height+((cell.bounds.size.height-text.frame.size.height)/6.0), 30.0, 30.0)];
+    [retweetBtn setReversesTitleShadowWhenHighlighted:YES];
+    [retweetBtn setShowsTouchWhenHighlighted:YES];
+    retweetBtn.tag = indexPath.section;
+    [retweetBtn setBackgroundImage:[UIImage imageNamed:@"twitter_retweet"] forState:UIControlStateNormal];
+    if(![self isAlreadyRetweet:tweet]){
+        [retweetBtn addTarget:self action:@selector(retweetButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }else{
+        [retweetBtn addTarget:self action:@selector(retweetDelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    [subCell.contentView addSubview:retweetBtn];
     
     UIButton *favoriteBtn = [[UIButton alloc]initWithFrame:CGRectMake(110.0, text.frame.size.height+((cell.bounds.size.height-text.frame.size.height)/6.0), 30.0, 30.0)];
     [favoriteBtn setReversesTitleShadowWhenHighlighted:YES];
     [favoriteBtn setShowsTouchWhenHighlighted:YES];
-    [favoriteBtn setBackgroundImage:[UIImage imageNamed:@"favorite"] forState:UIControlStateNormal];
     favoriteBtn.tag = indexPath.section;
-    [favoriteBtn addTarget:self action:@selector(favoriteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [favoriteBtn setBackgroundImage:[UIImage imageNamed:@"favorite"] forState:UIControlStateNormal];
+    if(![self isAlreadyFavorite:tweet]){
+        [favoriteBtn addTarget:self action:@selector(favoriteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }else{
+        [favoriteBtn addTarget:self action:@selector(favoriteDelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }
     [subCell.contentView addSubview:favoriteBtn];
     
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell setSelected:NO animated:NO];
     cell.userInteractionEnabled = YES;
     return cell;
+}
+
+-(Boolean)isAlreadyRetweet:(Tweet *)tweet{
+    if(tweet.userTweets == nil){
+        return false;
+    }
+    for(NSUInteger i=0;i<tweet.userTweets.count;i++){
+        UserTweet *userTweet = [tweet.userTweets objectAtIndex:i];
+        if([userTweet.type isEqualToString:@"R"]){
+            return true;
+        }
+    }
+    return false;
+}
+
+-(Boolean)isAlreadyFavorite:(Tweet *)tweet{
+    if(tweet.userTweets == nil){
+        return false;
+    }
+    for(NSUInteger i=0;i<tweet.userTweets.count;i++){
+        UserTweet *userTweet = [tweet.userTweets objectAtIndex:i];
+        if([userTweet.type isEqualToString:@"F"]){
+            return true;
+        }
+    }
+    return false;
 }
 
 -(void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{

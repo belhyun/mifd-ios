@@ -21,6 +21,8 @@
 -(void) expandRow:(UITapGestureRecognizer *)gr;
 -(void) fetchTweets;
 -(void) closeWebView;
+-(Boolean)isAlreadyRetweet:(Tweet *)tweet;
+-(Boolean)isAlreadyFavorite:(Tweet *)tweet;
 -(NSMutableAttributedString *)getText:(Tweet *)tweet;
 @property (assign, nonatomic) int curPage;
 @property (assign, nonatomic) int totalPage;

@@ -10,11 +10,12 @@
 
 @implementation UserTweet
 -(NSMutableArray *) getUserTweets:(NSDictionary *)dictionary{
-    for(id key in dictionary){
+    self.userTweets = [[NSMutableArray alloc]init];
+    for(id obj in dictionary){
         UserTweet *userTweet = [[UserTweet alloc]init];
-        userTweet.tweetUuid = [dictionary objectForKey:@"tweet_uuid"];
-        userTweet.type = [dictionary objectForKey:@"type"];
-        userTweet.userDesc = [dictionary objectForKey:@"user_desc"];
+        userTweet.tweetUuid = [obj objectForKey:@"tweet_uuid"];
+        userTweet.type = [obj objectForKey:@"type"];
+        userTweet.userDesc = [obj objectForKey:@"user_desc"];
         [self.userTweets addObject:userTweet];
     }
     return self.userTweets;
