@@ -13,5 +13,6 @@
 #import "MifdKeychainItemWrapper.h"
 
 @interface UserSnsTableViewController : UITableViewController<MBProgressHUDDelegate, UIAlertViewDelegate>
+-(void) changeTweetView;
 @property (strong, nonatomic) MBProgressHUD *HUD;
 @end

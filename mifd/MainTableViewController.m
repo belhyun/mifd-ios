@@ -117,6 +117,10 @@ const int kLoadingCellTag = 1273;
     self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
 }
 
+-(void)changeTweetView{
+    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
+}
+
 - (Boolean)isDefinedEle:(NSArray *)array :(NSInteger)tag{
     NSEnumerator *enumerator = [array objectEnumerator];
     id anObject;
@@ -199,6 +203,7 @@ const int kLoadingCellTag = 1273;
 -(void)retweetButtonPressed:(id)sender{
     UIButton *clicked = (UIButton *) sender;
     if([User isLogged]){
+        [self.HUD show:true];
         [self snsRequest:[NSString stringWithFormat:@"https://api.twitter.com/1.1/statuses/retweet/%@.json",((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid] :sender :nil :@"R" :^(void){
             NSMutableDictionary *params = [[NSMutableDictionary alloc]init];
             [params setObject:[MifdKeychainItemWrapper keychainStringFromMatchingIdentifier:@"desc"] forKey:@"user_desc"];
@@ -214,6 +219,7 @@ const int kLoadingCellTag = 1273;
 -(void)favoriteButtonPressed:(id)sender{
     UIButton *clicked = (UIButton *) sender;
     if([User isLogged]){
+        [self.HUD show:true];
         NSMutableDictionary *dictionary = [[NSMutableDictionary alloc]init];
         [dictionary setObject:((Tweet *)[self.tweets objectAtIndex:clicked.tag]).uuid forKey:@"id"];
         [self snsRequest:@"https://api.twitter.com/1.1/favorites/create.json" :sender :dictionary :@"F" :^(void){
@@ -230,6 +236,7 @@ const int kLoadingCellTag = 1273;
 
 -(void)retweetDelButtonPressed:(id)sender{
     if([User isLogged]){
+        [self.HUD hide:true];
         [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"이미 retweet 하셨네요!" delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil] show];
     }else{
         [self changeLoginView];
@@ -238,6 +245,7 @@ const int kLoadingCellTag = 1273;
 
 -(void)favoriteDelButtonPressed:(id)sender{
     if([User isLogged]){
+        [self.HUD hide:true];
         [[[UIAlertView alloc] initWithTitle:@"MIFD" message:@"이미 favorite 하셨네요!" delegate:self cancelButtonTitle:@"취소" otherButtonTitles:nil, nil] show];
     }else{
         [self changeLoginView];

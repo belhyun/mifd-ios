@@ -87,6 +87,7 @@
                     [cell.textLabel setText:[NSString stringWithFormat:@"%@ %@",cell.textLabel.text, twitterAccount.accountDescription]];
                     [MifdKeychainItemWrapper createKeychainValue:twitterAccount.accountDescription forIdentifier:@"desc"];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"fetchTweets" object:self];
+                    [self changeTweetView];
                 }
             }];
         }else{
@@ -96,13 +97,17 @@
     }
 }
 
+-(void)changeTweetView{
+    self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 1){
         [MifdKeychainItemWrapper deleteItemFromKeychainWithIdentifier:@"desc"];
         UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
         [cell.textLabel setText:@"트위터 연동"];
-        //self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
-         [[NSNotificationCenter defaultCenter] postNotificationName:@"fetchTweets" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"fetchTweets" object:self];
+        [self changeTweetView];
     }
 }
 
